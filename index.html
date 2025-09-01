@@ -3,36 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Привет Мир!</title>
+    <title>Привет, Дима!</title>
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
-            height: 100vh;
+            box-sizing: border-box;
+        }
+        
+        body {
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #f0f0f0;
-            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: 'Arial', sans-serif;
         }
 
-        .hello-world {
-            font-size: 4rem;
-            font-weight: bold;
-            color: #0066cc;
+        .greeting {
+            font-size: 5rem;
+            font-weight: 900;
+            color: #1a56db;
             text-align: center;
             text-transform: uppercase;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
+            padding: 2rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            animation: pulse 2s ease-in-out infinite;
         }
 
-        /* Адаптивность для мобильных устройств */
+        /* Анимация пульсации */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Адаптивность */
         @media (max-width: 768px) {
-            .hello-world {
-                font-size: 2.5rem;
+            .greeting {
+                font-size: 3rem;
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .greeting {
+                font-size: 2.2rem;
+                padding: 1rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="hello-world">Привет мир!</div>
+    <div class="greeting">Привет я Дима</div>
 </body>
 </html>
