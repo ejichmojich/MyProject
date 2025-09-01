@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Привет, Дима!</title>
+    <title>Привет, Дима! + Игра</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -30,6 +30,47 @@
             align-items: center;
             width: 100%;
             max-width: 1200px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 20px;
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .score-display {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #1a56db;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .game-toggle {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(to right, #7c3aed, #8b5cf6);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .game-toggle:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
         }
 
         .greeting {
@@ -60,6 +101,98 @@
             background: linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0.3));
             z-index: 1;
             pointer-events: none;
+        }
+
+        .game-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 800px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .game-title {
+            font-size: 2.2rem;
+            color: #1a56db;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .game-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .click-area {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, #1a56db, #0ea5e9);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            transition: transform 0.1s;
+            user-select: none;
+        }
+
+        .click-area:active {
+            transform: scale(0.95);
+        }
+
+        .upgrades {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .upgrade {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(to right, #059669, #10b981);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 150px;
+        }
+
+        .upgrade:disabled {
+            background: linear-gradient(to right, #9ca3af, #d1d5db);
+            cursor: not-allowed;
+        }
+
+        .upgrade:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .upgrade-name {
+            font-size: 1.1rem;
+        }
+
+        .upgrade-cost {
+            font-size: 0.9rem;
+            opacity: 0.9;
         }
 
         .controls {
@@ -203,12 +336,17 @@
         }
 
         @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
             .greeting {
                 font-size: 3.2rem;
                 padding: 1.5rem;
             }
             
-            .controls {
+            .controls, .game-container {
                 flex-direction: column;
                 align-items: center;
                 gap: 12px;
@@ -218,7 +356,7 @@
                 width: 100%;
             }
             
-            button {
+            button, .upgrade {
                 width: 100%;
                 justify-content: center;
             }
@@ -233,6 +371,11 @@
             button {
                 padding: 10px 15px;
                 font-size: 0.9rem;
+            }
+            
+            .click-area {
+                width: 150px;
+                height: 150px;
             }
         }
 
@@ -255,11 +398,66 @@
                 opacity: 0;
             }
         }
+
+        .click-effect {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: click-anim 0.5s ease-out forwards;
+        }
+
+        @keyframes click-anim {
+            0% {
+                transform: scale(0);
+                opacity: 0.7;
+            }
+            100% {
+                transform: scale(3);
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="header">
+            <div class="score-display">
+                <i class="fas fa-coins"></i>
+                <span id="score">0</span>
+            </div>
+            <button class="game-toggle" id="gameToggle">
+                <i class="fas fa-gamepad"></i>
+                <span>Открыть игру</span>
+            </button>
+        </div>
+
         <div class="greeting pulse" id="greeting">Привет, я Дима!</div>
+        
+        <div class="game-container" id="gameContainer">
+            <h2 class="game-title">Кликер для Димы</h2>
+            <div class="game-area">
+                <div class="click-area" id="clickArea">
+                    Кликни!
+                </div>
+                <div class="upgrades">
+                    <button class="upgrade" id="upgrade1">
+                        <span class="upgrade-name">Улучшение x2</span>
+                        <span class="upgrade-cost">Стоимость: 50</span>
+                    </button>
+                    <button class="upgrade" id="upgrade2">
+                        <span class="upgrade-name">Автокликер</span>
+                        <span class="upgrade-cost">Стоимость: 200</span>
+                    </button>
+                    <button class="upgrade" id="upgrade3">
+                        <span class="upgrade-name">Мегакликер</span>
+                        <span class="upgrade-cost">Стоимость: 1000</span>
+                    </button>
+                </div>
+            </div>
+        </div>
         
         <div class="controls">
             <div class="control-group">
@@ -299,6 +497,19 @@
     <script>
         const greeting = document.getElementById('greeting');
         const body = document.body;
+        const gameToggle = document.getElementById('gameToggle');
+        const gameContainer = document.getElementById('gameContainer');
+        const clickArea = document.getElementById('clickArea');
+        const scoreDisplay = document.getElementById('score');
+        const upgrade1 = document.getElementById('upgrade1');
+        const upgrade2 = document.getElementById('upgrade2');
+        const upgrade3 = document.getElementById('upgrade3');
+        
+        // Игровые переменные
+        let score = 0;
+        let clickValue = 1;
+        let autoClickValue = 0;
+        let autoClickInterval;
         
         // Цвета для фона
         const backgrounds = [
@@ -318,6 +529,106 @@
             animation: 'pulse',
             background: backgrounds[0]
         };
+        
+        // Функция обновления счета
+        function updateScore() {
+            scoreDisplay.textContent = score;
+            // Сохраняем игровой прогресс
+            localStorage.setItem('dimaGameScore', score);
+            localStorage.setItem('dimaGameClickValue', clickValue);
+            localStorage.setItem('dimaGameAutoClickValue', autoClickValue);
+            
+            // Обновляем доступность улучшений
+            upgrade1.disabled = score < 50;
+            upgrade2.disabled = score < 200;
+            upgrade3.disabled = score < 1000;
+        }
+        
+        // Функция клика по игровой области
+        function handleClick() {
+            score += clickValue;
+            updateScore();
+            createClickEffect(event);
+            createConfetti();
+            
+            // Анимация клика
+            clickArea.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                clickArea.style.transform = 'scale(1)';
+            }, 100);
+        }
+        
+        // Функция создания эффекта клика
+        function createClickEffect(event) {
+            const effect = document.createElement('div');
+            effect.classList.add('click-effect');
+            effect.style.left = (event.clientX - 15) + 'px';
+            effect.style.top = (event.clientY - 15) + 'px';
+            document.body.appendChild(effect);
+            
+            setTimeout(() => {
+                effect.remove();
+            }, 500);
+        }
+        
+        // Функция автокликера
+        function startAutoClick() {
+            if (autoClickInterval) {
+                clearInterval(autoClickInterval);
+            }
+            
+            if (autoClickValue > 0) {
+                autoClickInterval = setInterval(() => {
+                    score += autoClickValue;
+                    updateScore();
+                }, 1000);
+            }
+        }
+        
+        // Покупка улучшений
+        upgrade1.addEventListener('click', () => {
+            if (score >= 50) {
+                score -= 50;
+                clickValue *= 2;
+                updateScore();
+                upgrade1.textContent = 'Улучшение x' + clickValue;
+                createConfetti('#ffd700');
+            }
+        });
+        
+        upgrade2.addEventListener('click', () => {
+            if (score >= 200) {
+                score -= 200;
+                autoClickValue += 1;
+                updateScore();
+                startAutoClick();
+                createConfetti('#10b981');
+            }
+        });
+        
+        upgrade3.addEventListener('click', () => {
+            if (score >= 1000) {
+                score -= 1000;
+                clickValue *= 5;
+                updateScore();
+                upgrade3.textContent = 'Мегакликер x' + clickValue;
+                createConfetti('#dc2626');
+            }
+        });
+        
+        // Переключение видимости игры
+        gameToggle.addEventListener('click', () => {
+            if (gameContainer.style.display === 'flex') {
+                gameContainer.style.display = 'none';
+                gameToggle.innerHTML = '<i class="fas fa-gamepad"></i><span>Открыть игру</span>';
+            } else {
+                gameContainer.style.display = 'flex';
+                gameToggle.innerHTML = '<i class="fas fa-times"></i><span>Закрыть игру</span>';
+            }
+        });
+        
+        // Обработчик клика по игровой области
+        clickArea.addEventListener('click', handleClick);
         
         // Функция смены цвета текста
         function changeColor(color, button) {
@@ -448,6 +759,28 @@
                 body.style.background = settings.background;
                 changeAnimation(settings.animation);
                 currentSettings = settings;
+            }
+            
+            // Загрузка игрового прогресса
+            const savedScore = localStorage.getItem('dimaGameScore');
+            const savedClickValue = localStorage.getItem('dimaGameClickValue');
+            const savedAutoClickValue = localStorage.getItem('dimaGameAutoClickValue');
+            
+            if (savedScore) {
+                score = parseInt(savedScore);
+                clickValue = parseInt(savedClickValue) || 1;
+                autoClickValue = parseInt(savedAutoClickValue) || 0;
+                
+                updateScore();
+                startAutoClick();
+                
+                if (clickValue > 2) {
+                    upgrade1.textContent = 'Улучшение x' + clickValue;
+                }
+                
+                if (autoClickValue > 0) {
+                    upgrade2.textContent = `Автокликер (${autoClickValue}/с)`;
+                }
             }
         });
     </script>
