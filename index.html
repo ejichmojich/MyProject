@@ -3,785 +3,287 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Привет, Дима! + Игра</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Таблица умножения</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
         }
         
         body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            align-items: center;
             justify-content: center;
-            align-items: center;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            font-family: 'Arial', sans-serif;
             padding: 20px;
-            transition: all 0.5s ease;
         }
-
+        
         .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            max-width: 1200px;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            margin-bottom: 20px;
-            padding: 15px 25px;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        .score-display {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #1a56db;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .game-toggle {
-            padding: 12px 25px;
-            border: none;
-            border-radius: 10px;
-            background: linear-gradient(to right, #7c3aed, #8b5cf6);
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .game-toggle:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .greeting {
-            font-size: 5rem;
-            font-weight: 900;
-            color: #1a56db;
-            text-align: center;
-            text-transform: uppercase;
-            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
-            padding: 2rem;
             background: white;
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            max-width: 900px;
+            width: 100%;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
             margin-bottom: 30px;
-            cursor: pointer;
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .multiplication-table {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 10px;
+            margin: 0 auto;
+        }
+        
+        .cell {
+            padding: 15px;
+            text-align: center;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.2rem;
             transition: all 0.3s ease;
+            cursor: pointer;
             position: relative;
             overflow: hidden;
         }
-
-        .greeting::before {
+        
+        .cell:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .cell:hover::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0.3));
-            z-index: 1;
-            pointer-events: none;
+            background: linear-gradient(45deg, rgba(255,255,255,0.2), rgba(255,255,255,0.4));
         }
-
-        .game-container {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            max-width: 800px;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
-        }
-
-        .game-title {
-            font-size: 2.2rem;
-            color: #1a56db;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .game-area {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-            width: 100%;
-        }
-
-        .click-area {
-            width: 200px;
-            height: 200px;
-            background: linear-gradient(135deg, #1a56db, #0ea5e9);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             color: white;
-            font-size: 1.5rem;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-            transition: transform 0.1s;
-            user-select: none;
+            font-size: 1.3rem !important;
         }
-
-        .click-area:active {
-            transform: scale(0.95);
-        }
-
-        .upgrades {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            justify-content: center;
-            width: 100%;
-        }
-
-        .upgrade {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 10px;
-            background: linear-gradient(to right, #059669, #10b981);
+        
+        .row-header {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
             color: white;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-width: 150px;
         }
-
-        .upgrade:disabled {
-            background: linear-gradient(to right, #9ca3af, #d1d5db);
-            cursor: not-allowed;
+        
+        .even {
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            color: #333;
         }
-
-        .upgrade:hover:not(:disabled) {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        
+        .odd {
+            background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+            color: #333;
         }
-
-        .upgrade-name {
-            font-size: 1.1rem;
+        
+        .prime {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            color: #333;
+            border: 2px solid #ff9a9e;
         }
-
-        .upgrade-cost {
-            font-size: 0.9rem;
-            opacity: 0.9;
-        }
-
+        
         .controls {
             display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
             justify-content: center;
-            margin-top: 20px;
-            padding: 25px;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 800px;
+            gap: 20px;
+            margin-top: 30px;
+            flex-wrap: wrap;
         }
-
-        .control-group {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            margin: 10px;
-        }
-
-        .control-title {
-            font-weight: bold;
-            color: #333;
-            font-size: 1.1rem;
-            margin-bottom: 5px;
-        }
-
-        button {
-            padding: 12px 20px;
+        
+        .size-btn {
+            padding: 12px 25px;
             border: none;
             border-radius: 10px;
-            background: linear-gradient(to right, #1a56db, #0ea5e9);
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
-
-        button:hover {
+        
+        .size-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
         }
-
-        button:active {
-            transform: translateY(1px);
+        
+        .info {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+            font-size: 0.9rem;
         }
-
-        .color-btn {
-            min-width: 130px;
-        }
-
-        .selected {
-            box-shadow: 0 0 0 3px #ffd700, 0 0 0 6px rgba(255, 215, 0, 0.4);
-        }
-
-        .save-btn {
-            background: linear-gradient(to right, #059669, #10b981);
-            padding: 14px 25px;
-            font-size: 1.1rem;
-        }
-
-        .reset-btn {
-            background: linear-gradient(to right, #dc2626, #ef4444);
-        }
-
-        /* Анимации */
-        .pulse {
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        .rotate {
-            animation: rotate 4s linear infinite;
-        }
-
-        .bounce {
-            animation: bounce 1.8s ease-in-out infinite;
-        }
-
-        .shake {
-            animation: shake 0.8s ease-in-out infinite;
-        }
-
-        .flip {
-            animation: flip 3s ease-in-out infinite;
-        }
-
-        .glow {
-            animation: glow 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-25px); }
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
-        }
-
-        @keyframes flip {
-            0%, 80% { transform: rotateY(0); }
-            90% { transform: rotateY(180deg); }
-        }
-
-        @keyframes glow {
-            from { box-shadow: 0 0 15px rgba(26, 86, 219, 0.5); }
-            to { box-shadow: 0 0 30px rgba(26, 86, 219, 0.8), 0 0 40px rgba(59, 130, 246, 0.6); }
-        }
-
+        
         /* Адаптивность */
-        @media (max-width: 900px) {
-            .greeting {
-                font-size: 4rem;
-                padding: 1.8rem;
-            }
-            
-            .controls {
-                padding: 20px;
-            }
-        }
-
         @media (max-width: 768px) {
-            .header {
-                flex-direction: column;
-                gap: 15px;
+            .multiplication-table {
+                grid-template-columns: repeat(5, 1fr);
             }
             
-            .greeting {
-                font-size: 3.2rem;
-                padding: 1.5rem;
+            .cell {
+                padding: 10px;
+                font-size: 1rem;
             }
             
-            .controls, .game-container {
-                flex-direction: column;
-                align-items: center;
-                gap: 12px;
-            }
-            
-            .control-group {
-                width: 100%;
-            }
-            
-            button, .upgrade {
-                width: 100%;
-                justify-content: center;
+            h1 {
+                font-size: 2rem;
             }
         }
-
+        
         @media (max-width: 480px) {
-            .greeting {
-                font-size: 2.5rem;
-                padding: 1.2rem;
+            .multiplication-table {
+                grid-template-columns: repeat(3, 1fr);
             }
             
-            button {
-                padding: 10px 15px;
+            .cell {
+                padding: 8px;
                 font-size: 0.9rem;
             }
             
-            .click-area {
-                width: 150px;
-                height: 150px;
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .size-btn {
+                width: 100%;
+                max-width: 200px;
             }
         }
-
-        .confetti {
-            position: absolute;
-            width: 15px;
-            height: 15px;
-            opacity: 0;
-            animation: confetti-fall 5s linear forwards;
-            z-index: 100;
+        
+        .highlight {
+            animation: highlight 1s ease-in-out;
         }
-
-        @keyframes confetti-fall {
-            0% {
-                transform: translateY(-100px) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(100vh) rotate(720deg);
-                opacity: 0;
-            }
-        }
-
-        .click-effect {
-            position: absolute;
-            width: 30px;
-            height: 30px;
-            background: rgba(255, 255, 255, 0.7);
-            border-radius: 50%;
-            pointer-events: none;
-            animation: click-anim 0.5s ease-out forwards;
-        }
-
-        @keyframes click-anim {
-            0% {
-                transform: scale(0);
-                opacity: 0.7;
-            }
-            100% {
-                transform: scale(3);
-                opacity: 0;
-            }
+        
+        @keyframes highlight {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); background: #ffeb3b; color: #000; }
+            100% { transform: scale(1); }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <div class="score-display">
-                <i class="fas fa-coins"></i>
-                <span id="score">0</span>
-            </div>
-            <button class="game-toggle" id="gameToggle">
-                <i class="fas fa-gamepad"></i>
-                <span>Открыть игру</span>
-            </button>
-        </div>
-
-        <div class="greeting pulse" id="greeting">Привет, я Дима!</div>
+        <h1>Таблица умножения</h1>
         
-        <div class="game-container" id="gameContainer">
-            <h2 class="game-title">Кликер для Димы</h2>
-            <div class="game-area">
-                <div class="click-area" id="clickArea">
-                    Кликни!
-                </div>
-                <div class="upgrades">
-                    <button class="upgrade" id="upgrade1">
-                        <span class="upgrade-name">Улучшение x2</span>
-                        <span class="upgrade-cost">Стоимость: 50</span>
-                    </button>
-                    <button class="upgrade" id="upgrade2">
-                        <span class="upgrade-name">Автокликер</span>
-                        <span class="upgrade-cost">Стоимость: 200</span>
-                    </button>
-                    <button class="upgrade" id="upgrade3">
-                        <span class="upgrade-name">Мегакликер</span>
-                        <span class="upgrade-cost">Стоимость: 1000</span>
-                    </button>
-                </div>
-            </div>
+        <div class="multiplication-table" id="multiplicationTable">
+            <!-- Таблица будет сгенерирована JavaScript -->
         </div>
         
         <div class="controls">
-            <div class="control-group">
-                <div class="control-title">Цвет текста:</div>
-                <div>
-                    <button class="color-btn selected" onclick="changeColor('#1a56db', this)"><i class="fas fa-palette"></i> Синий</button>
-                    <button class="color-btn" onclick="changeColor('#dc2626', this)"><i class="fas fa-palette"></i> Красный</button>
-                    <button class="color-btn" onclick="changeColor('#059669', this)"><i class="fas fa-palette"></i> Зеленый</button>
-                    <button class="color-btn" onclick="changeColor('#7c3aed', this)"><i class="fas fa-palette"></i> Фиолетовый</button>
-                </div>
-            </div>
-            
-            <div class="control-group">
-                <div class="control-title">Анимация:</div>
-                <div>
-                    <button onclick="changeAnimation('pulse', this)"><i class="fas fa-expand-alt"></i> Пульсация</button>
-                    <button onclick="changeAnimation('rotate', this)"><i class="fas fa-sync"></i> Вращение</button>
-                    <button onclick="changeAnimation('bounce', this)"><i class="fas fa-basket-ball"></i> Прыжки</button>
-                    <button onclick="changeAnimation('shake', this)"><i class="fas fa-vibration"></i> Тряска</button>
-                    <button onclick="changeAnimation('flip', this)"><i class="fas fa-sync-alt"></i> Переворот</button>
-                    <button onclick="changeAnimation('glow', this)"><i class="fas fa-lightbulb"></i> Свечение</button>
-                    <button onclick="changeAnimation('none', this)"><i class="fas fa-ban"></i> Без анимации</button>
-                </div>
-            </div>
-            
-            <div class="control-group">
-                <div class="control-title">Действия:</div>
-                <div>
-                    <button onclick="changeBackground()"><i class="fas fa-image"></i> Сменить фон</button>
-                    <button class="save-btn" onclick="saveSettings()"><i class="fas fa-save"></i> Сохранить настройки</button>
-                    <button class="reset-btn" onclick="resetSettings()"><i class="fas fa-undo"></i> Сбросить</button>
-                </div>
-            </div>
+            <button class="size-btn" onclick="changeTableSize(10)">10×10</button>
+            <button class="size-btn" onclick="changeTableSize(12)">12×12</button>
+            <button class="size-btn" onclick="changeTableSize(15)">15×15</button>
+        </div>
+        
+        <div class="info">
+            Кликните на ячейку, чтобы увидеть пример умножения
         </div>
     </div>
 
     <script>
-        const greeting = document.getElementById('greeting');
-        const body = document.body;
-        const gameToggle = document.getElementById('gameToggle');
-        const gameContainer = document.getElementById('gameContainer');
-        const clickArea = document.getElementById('clickArea');
-        const scoreDisplay = document.getElementById('score');
-        const upgrade1 = document.getElementById('upgrade1');
-        const upgrade2 = document.getElementById('upgrade2');
-        const upgrade3 = document.getElementById('upgrade3');
+        let currentSize = 10;
         
-        // Игровые переменные
-        let score = 0;
-        let clickValue = 1;
-        let autoClickValue = 0;
-        let autoClickInterval;
-        
-        // Цвета для фона
-        const backgrounds = [
-            'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
-            'linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%)',
-            'linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)',
-            'linear-gradient(135deg, #f6d365 0%, #fda085 100%)',
-            'linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%)',
-            'linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%)',
-            'linear-gradient(135deg, #a6c0fe 0%, #f68084 100%)'
-        ];
-        let bgIndex = 0;
-        
-        // Текущие настройки
-        let currentSettings = {
-            color: '#1a56db',
-            animation: 'pulse',
-            background: backgrounds[0]
-        };
-        
-        // Функция обновления счета
-        function updateScore() {
-            scoreDisplay.textContent = score;
-            // Сохраняем игровой прогресс
-            localStorage.setItem('dimaGameScore', score);
-            localStorage.setItem('dimaGameClickValue', clickValue);
-            localStorage.setItem('dimaGameAutoClickValue', autoClickValue);
+        // Функция создания таблицы умножения
+        function createMultiplicationTable(size) {
+            const table = document.getElementById('multiplicationTable');
+            table.innerHTML = '';
+            currentSize = size;
             
-            // Обновляем доступность улучшений
-            upgrade1.disabled = score < 50;
-            upgrade2.disabled = score < 200;
-            upgrade3.disabled = score < 1000;
-        }
-        
-        // Функция клика по игровой области
-        function handleClick() {
-            score += clickValue;
-            updateScore();
-            createClickEffect(event);
-            createConfetti();
-            
-            // Анимация клика
-            clickArea.style.transform = 'scale(0.95)';
-            setTimeout(() => {
-                clickArea.style.transform = 'scale(1)';
-            }, 100);
-        }
-        
-        // Функция создания эффекта клика
-        function createClickEffect(event) {
-            const effect = document.createElement('div');
-            effect.classList.add('click-effect');
-            effect.style.left = (event.clientX - 15) + 'px';
-            effect.style.top = (event.clientY - 15) + 'px';
-            document.body.appendChild(effect);
-            
-            setTimeout(() => {
-                effect.remove();
-            }, 500);
-        }
-        
-        // Функция автокликера
-        function startAutoClick() {
-            if (autoClickInterval) {
-                clearInterval(autoClickInterval);
-            }
-            
-            if (autoClickValue > 0) {
-                autoClickInterval = setInterval(() => {
-                    score += autoClickValue;
-                    updateScore();
-                }, 1000);
-            }
-        }
-        
-        // Покупка улучшений
-        upgrade1.addEventListener('click', () => {
-            if (score >= 50) {
-                score -= 50;
-                clickValue *= 2;
-                updateScore();
-                upgrade1.textContent = 'Улучшение x' + clickValue;
-                createConfetti('#ffd700');
-            }
-        });
-        
-        upgrade2.addEventListener('click', () => {
-            if (score >= 200) {
-                score -= 200;
-                autoClickValue += 1;
-                updateScore();
-                startAutoClick();
-                createConfetti('#10b981');
-            }
-        });
-        
-        upgrade3.addEventListener('click', () => {
-            if (score >= 1000) {
-                score -= 1000;
-                clickValue *= 5;
-                updateScore();
-                upgrade3.textContent = 'Мегакликер x' + clickValue;
-                createConfetti('#dc2626');
-            }
-        });
-        
-        // Переключение видимости игры
-        gameToggle.addEventListener('click', () => {
-            if (gameContainer.style.display === 'flex') {
-                gameContainer.style.display = 'none';
-                gameToggle.innerHTML = '<i class="fas fa-gamepad"></i><span>Открыть игру</span>';
-            } else {
-                gameContainer.style.display = 'flex';
-                gameToggle.innerHTML = '<i class="fas fa-times"></i><span>Закрыть игру</span>';
-            }
-        });
-        
-        // Обработчик клика по игровой области
-        clickArea.addEventListener('click', handleClick);
-        
-        // Функция смены цвета текста
-        function changeColor(color, button) {
-            greeting.style.color = color;
-            currentSettings.color = color;
-            
-            // Убираем выделение со всех кнопок цвета
-            document.querySelectorAll('.color-btn').forEach(btn => {
-                btn.classList.remove('selected');
-            });
-            
-            // Добавляем выделение к нажатой кнопке
-            if (button) {
-                button.classList.add('selected');
-            }
-            
-            createConfetti(color);
-        }
-        
-        // Функция смены анимации
-        function changeAnimation(animation, button) {
-            // Удаляем все классы анимаций
-            greeting.classList.remove('pulse', 'rotate', 'bounce', 'shake', 'flip', 'glow');
-            
-            // Если выбрана какая-то анимация, добавляем её
-            if (animation !== 'none') {
-                greeting.classList.add(animation);
-            }
-            
-            currentSettings.animation = animation;
-            
-            // Создаем конфетти при смене анимации
-            createConfetti();
-        }
-        
-        // Функция смены фона
-        function changeBackground() {
-            bgIndex = (bgIndex + 1) % backgrounds.length;
-            body.style.background = backgrounds[bgIndex];
-            currentSettings.background = backgrounds[bgIndex];
-            
-            createConfetti();
-        }
-        
-        // Добавляем возможность менять цвет по клику на текст
-        greeting.addEventListener('click', function() {
-            const colors = ['#1a56db', '#dc2626', '#059669', '#7c3aed', '#ea580c', '#db2777', '#0891b2'];
-            const randomColor = colors[Math.floor(Math.random() * colors.length)];
-            changeColor(randomColor);
-        });
-        
-        // Функция создания конфетти
-        function createConfetti(color = null) {
-            for (let i = 0; i < 30; i++) {
-                const confetti = document.createElement('div');
-                confetti.classList.add('confetti');
-                confetti.style.left = Math.random() * 100 + 'vw';
-                confetti.style.backgroundColor = color || getRandomColor();
-                confetti.style.animationDelay = Math.random() * 2 + 's';
-                document.body.appendChild(confetti);
-                
-                // Удаляем конфетти после анимации
-                setTimeout(() => {
-                    confetti.remove();
-                }, 5000);
-            }
-        }
-        
-        // Функция получения случайного цвета
-        function getRandomColor() {
-            const colors = ['#1a56db', '#dc2626', '#059669', '#7c3aed', '#ea580c', '#db2777', '#0891b2', '#f59e0b', '#84cc16'];
-            return colors[Math.floor(Math.random() * colors.length)];
-        }
-        
-        // Функция сохранения настроек
-        function saveSettings() {
-            localStorage.setItem('dimaSettings', JSON.stringify(currentSettings));
-            
-            // Показываем уведомление
-            const notification = document.createElement('div');
-            notification.textContent = 'Настройки сохранены!';
-            notification.style.position = 'fixed';
-            notification.style.bottom = '20px';
-            notification.style.right = '20px';
-            notification.style.backgroundColor = '#059669';
-            notification.style.color = 'white';
-            notification.style.padding = '10px 20px';
-            notification.style.borderRadius = '5px';
-            notification.style.zIndex = '1000';
-            notification.style.boxShadow = '0 4px 10px rgba(0, 0, 0, 0.2)';
-            document.body.appendChild(notification);
-            
-            // Удаляем уведомление через 3 секунды
-            setTimeout(() => {
-                notification.remove();
-            }, 3000);
-            
-            createConfetti('#059669');
-        }
-        
-        // Функция сброса настроек
-        function resetSettings() {
-            greeting.style.color = '#1a56db';
-            body.style.background = backgrounds[0];
-            changeAnimation('pulse');
-            
-            // Сбрасываем выделение кнопок
-            document.querySelectorAll('.color-btn').forEach(btn => {
-                btn.classList.remove('selected');
-            });
-            document.querySelector('.color-btn').classList.add('selected');
-            
-            currentSettings = {
-                color: '#1a56db',
-                animation: 'pulse',
-                background: backgrounds[0]
-            };
-            
-            createConfetti();
-        }
-        
-        // Загрузка сохраненных настроек при загрузке страницы
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedSettings = localStorage.getItem('dimaSettings');
-            if (savedSettings) {
-                const settings = JSON.parse(savedSettings);
-                greeting.style.color = settings.color;
-                body.style.background = settings.background;
-                changeAnimation(settings.animation);
-                currentSettings = settings;
-            }
-            
-            // Загрузка игрового прогресса
-            const savedScore = localStorage.getItem('dimaGameScore');
-            const savedClickValue = localStorage.getItem('dimaGameClickValue');
-            const savedAutoClickValue = localStorage.getItem('dimaGameAutoClickValue');
-            
-            if (savedScore) {
-                score = parseInt(savedScore);
-                clickValue = parseInt(savedClickValue) || 1;
-                autoClickValue = parseInt(savedAutoClickValue) || 0;
-                
-                updateScore();
-                startAutoClick();
-                
-                if (clickValue > 2) {
-                    upgrade1.textContent = 'Улучшение x' + clickValue;
-                }
-                
-                if (autoClickValue > 0) {
-                    upgrade2.textContent = `Автокликер (${autoClickValue}/с)`;
+            // Создаем заголовки строк и столбцов
+            for (let i = 0; i <= size; i++) {
+                for (let j = 0; j <= size; j++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    
+                    if (i === 0 && j === 0) {
+                        // Левая верхняя ячейка
+                        cell.textContent = '×';
+                        cell.className += ' header';
+                    } else if (i === 0) {
+                        // Заголовки столбцов
+                        cell.textContent = j;
+                        cell.className += ' header';
+                    } else if (j === 0) {
+                        // Заголовки строк
+                        cell.textContent = i;
+                        cell.className += ' row-header';
+                    } else {
+                        // Ячейки с результатами умножения
+                        const result = i * j;
+                        cell.textContent = result;
+                        
+                        // Определяем класс для окрашивания
+                        if (result % 2 === 0) {
+                            cell.className += ' even';
+                        } else {
+                            cell.className += ' odd';
+                        }
+                        
+                        // Помечаем простые числа
+                        if (isPrime(result)) {
+                            cell.className += ' prime';
+                        }
+                        
+                        // Добавляем обработчик клика
+                        cell.addEventListener('click', () => {
+                            cell.classList.add('highlight');
+                            setTimeout(() => {
+                                cell.classList.remove('highlight');
+                            }, 1000);
+                            alert(`${i} × ${j} = ${result}`);
+                        });
+                    }
+                    
+                    table.appendChild(cell);
                 }
             }
+            
+            // Обновляем CSS grid
+            table.style.gridTemplateColumns = `repeat(${size + 1}, 1fr)`;
+        }
+        
+        // Функция проверки простого числа
+        function isPrime(num) {
+            if (num <= 1) return false;
+            if (num <= 3) return true;
+            if (num % 2 === 0 || num % 3 === 0) return false;
+            
+            for (let i = 5; i * i <= num; i += 6) {
+                if (num % i === 0 || num % (i + 2) === 0) return false;
+            }
+            return true;
+        }
+        
+        // Функция изменения размера таблицы
+        function changeTableSize(size) {
+            createMultiplicationTable(size);
+        }
+        
+        // Создаем таблицу при загрузке страницы
+        document.addEventListener('DOMContentLoaded', () => {
+            createMultiplicationTable(10);
         });
     </script>
 </body>
