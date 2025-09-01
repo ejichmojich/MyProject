@@ -14,10 +14,13 @@
         body {
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             font-family: 'Arial', sans-serif;
+            padding: 20px;
+            transition: background 0.5s ease;
         }
 
         .greeting {
@@ -31,14 +34,71 @@
             background: white;
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            margin-bottom: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            background: #1a56db;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .color-btn {
+            min-width: 120px;
+        }
+
+        /* Анимации */
+        .pulse {
             animation: pulse 2s ease-in-out infinite;
         }
 
-        /* Анимация пульсации */
+        .rotate {
+            animation: rotate 3s linear infinite;
+        }
+
+        .bounce {
+            animation: bounce 2s ease-in-out infinite;
+        }
+
         @keyframes pulse {
             0% { transform: scale(1); }
             50% { transform: scale(1.05); }
             100% { transform: scale(1); }
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
         }
 
         /* Адаптивность */
@@ -46,6 +106,11 @@
             .greeting {
                 font-size: 3rem;
                 padding: 1.5rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
             }
         }
 
@@ -58,6 +123,62 @@
     </style>
 </head>
 <body>
-    <div class="greeting">Привет, я Дима</div>
+    <div class="greeting pulse" id="greeting">Привет я Дима</div>
+    
+    <div class="controls">
+        <button class="color-btn" onclick="changeColor('#1a56db')">Синий</button>
+        <button class="color-btn" onclick="changeColor('#dc2626')">Красный</button>
+        <button class="color-btn" onclick="changeColor('#059669')">Зеленый</button>
+        <button class="color-btn" onclick="changeColor('#7c3aed')">Фиолетовый</button>
+        <button onclick="changeAnimation('pulse')">Пульсация</button>
+        <button onclick="changeAnimation('rotate')">Вращение</button>
+        <button onclick="changeAnimation('bounce')">Прыжки</button>
+        <button onclick="changeAnimation('none')">Без анимации</button>
+        <button onclick="changeBackground()">Сменить фон</button>
+    </div>
+
+    <script>
+        const greeting = document.getElementById('greeting');
+        const body = document.body;
+        
+        // Цвета для фона
+        const backgrounds = [
+            'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+            'linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%)',
+            'linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)',
+            'linear-gradient(135deg, #f6d365 0%, #fda085 100%)',
+            'linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%)'
+        ];
+        let bgIndex = 0;
+        
+        // Функция смены цвета текста
+        function changeColor(color) {
+            greeting.style.color = color;
+        }
+        
+        // Функция смены анимации
+        function changeAnimation(animation) {
+            // Удаляем все классы анимаций
+            greeting.classList.remove('pulse', 'rotate', 'bounce');
+            
+            // Если выбрана какая-то анимация, добавляем её
+            if (animation !== 'none') {
+                greeting.classList.add(animation);
+            }
+        }
+        
+        // Функция смены фона
+        function changeBackground() {
+            bgIndex = (bgIndex + 1) % backgrounds.length;
+            body.style.background = backgrounds[bgIndex];
+        }
+        
+        // Добавляем возможность менять цвет по клику на текст
+        greeting.addEventListener('click', function() {
+            const colors = ['#1a56db', '#dc2626', '#059669', '#7c3aed', '#ea580c'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            changeColor(randomColor);
+        });
+    </script>
 </body>
 </html>
